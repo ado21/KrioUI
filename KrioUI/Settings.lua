@@ -348,39 +348,60 @@ local function outlineOnNamePlates()
     SetFont(SystemFont_NamePlateFixed,11) 
 end
 
+local function combatIndicatorYPosition_byPrestige() 
+    return prestigeIcons and 0 or 15
+end
+
 local function combatIndicator()
     if combatIndicator then
-		local targetFrame = CreateFrame("Frame", nil , TargetFrame)
-		targetFrame:SetPoint("LEFT", TargetFrame, "RIGHT", -20, 5)
-		targetFrame:SetSize(26,26)
-		targetFrame.icon = targetFrame:CreateTexture(nil, "BORDER")
-		targetFrame.icon:SetAllPoints()
-		targetFrame.icon:SetTexture([[Interface\Icons\ABILITY_DUALWIELD]])
-		targetFrame:Hide()
+        local function combatIndicatorXPosition_byUnitClassification(unitClassification)
+            local x = -20
+           
+            -- If unit is a elite
+            local uC = UnitClassification(unitClassification)
+            if ( uC == "elite" or uC == "rareelite" or uC == "rare" ) then
+                x = -13
+            end
 
-		local focusFrame = CreateFrame("Frame", nil , FocusFrame)
-		focusFrame:SetPoint("LEFT", FocusFrame, "RIGHT", -20, 5)
-		focusFrame:SetSize(26,26)
-		focusFrame.icon = focusFrame:CreateTexture(nil, "BORDER")
-		focusFrame.icon:SetAllPoints()
-		focusFrame.icon:SetTexture([[Interface\Icons\ABILITY_DUALWIELD]])
-		focusFrame:Hide()
+            return x
+        end
 
-		local UnitAffectingCombat = UnitAffectingCombat
+        local targetFrame = CreateFrame("Frame", nil , TargetFrame)
+        targetFrame:SetPoint("LEFT", TargetFrame, "RIGHT", combatIndicatorXPosition_byUnitClassification("target"), combatIndicatorYPosition_byPrestige() + 1)
+        targetFrame:SetSize(26,26)
+        targetFrame.icon = targetFrame:CreateTexture(nil, "BORDER")
+        targetFrame.icon:SetAllPoints()
+        targetFrame.icon:SetTexture([[Interface\Icons\ABILITY_DUALWIELD]])
+        targetFrame:Hide()
 
-		local function CombatIndicator_Update()
-			targetFrame:SetShown(UnitAffectingCombat("target"))
-			focusFrame:SetShown(UnitAffectingCombat("focus"))
-		end
+        local focusFrame = CreateFrame("Frame", nil , FocusFrame)
+        focusFrame:SetPoint("LEFT", FocusFrame, "RIGHT", combatIndicatorXPosition_byUnitClassification("focus"), combatIndicatorYPosition_byPrestige())
+        focusFrame:SetSize(26,26)
+        focusFrame.icon = focusFrame:CreateTexture(nil, "BORDER")
+        focusFrame.icon:SetAllPoints()
+        focusFrame.icon:SetTexture([[Interface\Icons\ABILITY_DUALWIELD]])
+        focusFrame:Hide()
 
-		C_Timer.NewTicker(0.1, CombatIndicator_Update)
-	end
+        local UnitAffectingCombat = UnitAffectingCombat
+
+        local function CombatIndicators_Update()
+            -- target
+            targetFrame:SetPoint("LEFT", TargetFrame, "RIGHT", combatIndicatorXPosition_byUnitClassification("target"), combatIndicatorYPosition_byPrestige() + 1)
+            targetFrame:SetShown(UnitAffectingCombat("target"))
+            -- focus
+            focusFrame:SetPoint("LEFT", FocusFrame, "RIGHT", combatIndicatorXPosition_byUnitClassification("focus"), combatIndicatorYPosition_byPrestige())
+            focusFrame:SetShown(UnitAffectingCombat("focus"))
+        end
+
+        C_Timer.NewTicker(0.01, CombatIndicators_Update)
+    end
 end
 
 local function combatIndicatorPlayer() 
     if combatIndicatorPlayer then
         local playerFrame = CreateFrame("Frame", nil , PlayerFrame)
-        playerFrame:SetPoint("LEFT", PlayerFrame, "LEFT", -10, 0)
+     
+        playerFrame:SetPoint("LEFT", PlayerFrame, "LEFT", -10, combatIndicatorYPosition_byPrestige())
         playerFrame:SetSize(26,26)
         playerFrame.icon = playerFrame:CreateTexture(nil, "BORDER")
         playerFrame.icon:SetAllPoints()
@@ -391,9 +412,9 @@ local function combatIndicatorPlayer()
 
         local function CombatIndicator_Update()
             playerFrame:SetShown(UnitAffectingCombat("player"))
-		end
+        end
 
-		C_Timer.NewTicker(0.1, CombatIndicator_Update)
+        C_Timer.NewTicker(0.01, CombatIndicator_Update)
     end
 end
 
