@@ -348,16 +348,18 @@ local function outlineOnNamePlates()
     SetFont(SystemFont_NamePlateFixed,11) 
 end
 
+-- return different x coordination in case prestige icons are turned on/off 
 local function combatIndicatorYPosition_byPrestige() 
     return prestigeIcons and 0 or 15
 end
 
 local function combatIndicator()
     if combatIndicator then
+        -- return different x coordination in case unit is rare/elite/rareelite
         local function combatIndicatorXPosition_byUnitClassification(unitClassification)
             local x = -20
            
-            -- If unit is a elite
+            -- Blizz function to retrieve unit type
             local uC = UnitClassification(unitClassification)
             if ( uC == "elite" or uC == "rareelite" or uC == "rare" ) then
                 x = -13
@@ -366,6 +368,7 @@ local function combatIndicator()
             return x
         end
 
+        -- Attach combat icon to target frame and hide by default
         local targetFrame = CreateFrame("Frame", nil , TargetFrame)
         targetFrame:SetPoint("LEFT", TargetFrame, "RIGHT", combatIndicatorXPosition_byUnitClassification("target"), combatIndicatorYPosition_byPrestige() + 1)
         targetFrame:SetSize(26,26)
@@ -374,6 +377,7 @@ local function combatIndicator()
         targetFrame.icon:SetTexture([[Interface\Icons\ABILITY_DUALWIELD]])
         targetFrame:Hide()
 
+        -- Attach combat icon to focus frame and hide by default
         local focusFrame = CreateFrame("Frame", nil , FocusFrame)
         focusFrame:SetPoint("LEFT", FocusFrame, "RIGHT", combatIndicatorXPosition_byUnitClassification("focus"), combatIndicatorYPosition_byPrestige())
         focusFrame:SetSize(26,26)
@@ -385,14 +389,14 @@ local function combatIndicator()
         local UnitAffectingCombat = UnitAffectingCombat
 
         local function CombatIndicators_Update()
-            -- target
+            -- show combat indicator in case target is in combat
             targetFrame:SetPoint("LEFT", TargetFrame, "RIGHT", combatIndicatorXPosition_byUnitClassification("target"), combatIndicatorYPosition_byPrestige() + 1)
             targetFrame:SetShown(UnitAffectingCombat("target"))
-            -- focus
+            -- show combat indicator in case focus is in combat
             focusFrame:SetPoint("LEFT", FocusFrame, "RIGHT", combatIndicatorXPosition_byUnitClassification("focus"), combatIndicatorYPosition_byPrestige())
             focusFrame:SetShown(UnitAffectingCombat("focus"))
         end
-
+        -- update timer to check if unit frame is in combat
         C_Timer.NewTicker(0.01, CombatIndicators_Update)
     end
 end
