@@ -408,8 +408,6 @@ local function combatIndicatorPlayer()
         playerFrame.icon:SetTexture([[Interface\Icons\ABILITY_DUALWIELD]])
         playerFrame:Hide()
 
-        local UnitAffectingCombat = UnitAffectingCombat
-
         local function CombatIndicator_Update()
             playerFrame:SetShown(UnitAffectingCombat("player"))
         end
