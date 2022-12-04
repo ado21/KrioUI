@@ -370,7 +370,6 @@ local function combatIndicator()
 
         -- Attach combat icon to target frame and hide by default
         local targetFrame = CreateFrame("Frame", nil , TargetFrame)
-        targetFrame:SetPoint("LEFT", TargetFrame, "RIGHT", combatIndicatorXPosition_byUnitClassification("target"), combatIndicatorYPosition_byPrestige() + 1)
         targetFrame:SetSize(26,26)
         targetFrame.icon = targetFrame:CreateTexture(nil, "BORDER")
         targetFrame.icon:SetAllPoints()
@@ -379,7 +378,6 @@ local function combatIndicator()
 
         -- Attach combat icon to focus frame and hide by default
         local focusFrame = CreateFrame("Frame", nil , FocusFrame)
-        focusFrame:SetPoint("LEFT", FocusFrame, "RIGHT", combatIndicatorXPosition_byUnitClassification("focus"), combatIndicatorYPosition_byPrestige())
         focusFrame:SetSize(26,26)
         focusFrame.icon = focusFrame:CreateTexture(nil, "BORDER")
         focusFrame.icon:SetAllPoints()
