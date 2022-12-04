@@ -386,8 +386,6 @@ local function combatIndicator()
         focusFrame.icon:SetTexture([[Interface\Icons\ABILITY_DUALWIELD]])
         focusFrame:Hide()
 
-        local UnitAffectingCombat = UnitAffectingCombat
-
         local function CombatIndicators_Update()
             -- show combat indicator in case target is in combat
             targetFrame:SetPoint("LEFT", TargetFrame, "RIGHT", combatIndicatorXPosition_byUnitClassification("target"), combatIndicatorYPosition_byPrestige() + 1)
