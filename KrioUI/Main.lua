@@ -2,8 +2,15 @@
 local _, ans = ...;
 local isFrameExist = ans.isFrameExist;
 local krioUiFrameName = "KrioUiMainFrame";
+local pveInstances = {"scenario", "party", "raid"};
 rG,gG,bG,aG = 1,1,1,1;
 
+local function arrayContainsItem(array, item)
+    for key, value in pairs(array) do
+        if value == item then return true end
+    end
+    return false
+end
 
 if  (not isFrameExist(krio)) then
     local frame = CreateFrame("Frame", krioUiFrameName);
@@ -13,6 +20,8 @@ if  (not isFrameExist(krio)) then
         --Tracking when player log into the world (logging in, /reload-ing)
         if (event == "PLAYER_ENTERING_WORLD" or event) then
             local initialLogin, reloadingUI = ...;
+            local inInstance, instanceType = IsInInstance();
+            ans.setPlayerIsInPVEInstance(arrayContainsItem(pveInstances, instanceType));
             if (initialLogin or reloadingUI) then
 
                 -- Load class colors
@@ -26,7 +35,7 @@ if  (not isFrameExist(krio)) then
                 end
                 if (prestigeIcons == true) then
                     ans.removePrestigeIcons();
-                end
+                                end
                 if (outlineNameplates == true) then
                     ans.outlineOnNamePlates();
                 end
@@ -96,7 +105,7 @@ hooksecurefunc("PlayerFrame_UpdateStatus", function(self)
     local combatStatusTexture = PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.StatusTexture;
     local playerFrameTargetContextual = PlayerFrame_GetPlayerFrameContentContextual();
     local playerPortraitCornerIcon = playerFrameTargetContextual.PlayerPortraitCornerIcon;
-	local attackIcon = playerFrameTargetContextual.AttackIcon;
+    local attackIcon = playerFrameTargetContextual.AttackIcon;
     if (PlayerFrame.inCombat and redFlashInCombat == true) then
         combatStatusTexture:Hide();
     end
