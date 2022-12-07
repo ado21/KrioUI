@@ -74,7 +74,8 @@ if  (not isFrameExist(krio)) then
     bgQueuePopFrame:RegisterEvent("UPDATE_BATTLEFIELD_STATUS");
 
     local function onBGQueuePop(self, event, ...)
-        if (hideQuestTracker == true) then
+        local status, mapName, instanceID, lowestlevel, highestlevel, teamSize, registeredMatch = GetBattlefieldStatus(1);
+        if (hideQuestTracker == true and status == "confirm") then
             -- ObjectiveTrackerFrame.collapsed returns true or nil
             isQuestTrackerCollapsed = ObjectiveTrackerFrame.collapsed
         end
