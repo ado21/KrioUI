@@ -3,7 +3,7 @@ local _, ans = ...;
 local isFrameExist = ans.isFrameExist;
 local krioUiFrameName = "KrioUiMainFrame";
 local pveInstances = {"scenario", "party", "raid"};
-local nonPvpInstances = {"scenario", "party", "raid", "none"};
+local pvpInstances = {"arena", "pvp"};
 rG,gG,bG,aG = 1,1,1,1;
 
 local function arrayContainsItem(array, item)
@@ -24,7 +24,7 @@ if  (not isFrameExist(krio)) then
             local inInstance, instanceType = IsInInstance();
             ans.setPlayerIsInPVEInstance(arrayContainsItem(pveInstances, instanceType));
             if hideQuestTracker == true and isInBattleground == true then
-                ans.returnQuestTrackerToPreviousState(arrayContainsItem(nonPvpInstances, instanceType)); 
+                ans.returnQuestTrackerToPreviousState(not arrayContainsItem(pvpInstances, instanceType)); 
             end
 
             if (initialLogin or reloadingUI) then
