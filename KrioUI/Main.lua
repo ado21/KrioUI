@@ -3,6 +3,7 @@ local _, ans = ...;
 local isFrameExist = ans.isFrameExist;
 local krioUiFrameName = "KrioUiMainFrame";
 local pveInstances = {"scenario", "party", "raid"};
+local pvpInstances = {"arena", "pvp"};
 rG,gG,bG,aG = 1,1,1,1;
 
 local function arrayContainsItem(array, item)
@@ -22,6 +23,10 @@ if  (not isFrameExist(krio)) then
             local initialLogin, reloadingUI = ...;
             local inInstance, instanceType = IsInInstance();
             ans.setPlayerIsInPVEInstance(arrayContainsItem(pveInstances, instanceType));
+            if hideQuestTracker == true and isInBattleground == true then
+                ans.returnQuestTrackerToPreviousState(not arrayContainsItem(pvpInstances, instanceType)); 
+            end
+
             if (initialLogin or reloadingUI) then
 
                 -- Load class colors
@@ -65,18 +70,33 @@ if  (not isFrameExist(krio)) then
     end
     frame:SetScript("OnEvent", onEvent); 
 
+    local bgQueuePopFrame = CreateFrame("Frame", "bgQueuePopFrame");
+    bgQueuePopFrame:RegisterEvent("UPDATE_BATTLEFIELD_STATUS");
+
+    local function onBGQueuePop(self, event, ...)
+        local status, mapName, instanceID, lowestlevel, highestlevel, teamSize, registeredMatch = GetBattlefieldStatus(1);
+        if (hideQuestTracker == true and status == "confirm") then
+            -- ObjectiveTrackerFrame.collapsed returns true or nil
+            isQuestTrackerCollapsed = ObjectiveTrackerFrame.collapsed
+        end
+    end
+
+    bgQueuePopFrame:SetScript("OnEvent", onBGQueuePop);
+
     --Tracking event PLAYER_ENTERING_BATTLEGROUND to be able to specify if player enters battleground
     local changeAreaFrame = CreateFrame("Frame", "KrioUiAreaChangeFrame");
     changeAreaFrame:RegisterEvent("PLAYER_ENTERING_BATTLEGROUND");
 
-    local function onAreaChange(self, event, ...)
+    local function onEnterBattleground(self, event, ...)
         --collapse quest tracker on entering battleground
         if (hideQuestTracker == true) then
+            isInBattleground = true;
             ObjectiveTracker_Collapse()
         end
     end
 
-    changeAreaFrame:SetScript("OnEvent", onAreaChange);
+    changeAreaFrame:SetScript("OnEvent", onEnterBattleground);
+
 end
 
 -- Remove PlayerFrame glow effect in rested area

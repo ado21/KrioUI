@@ -7,7 +7,7 @@ r = rG;
 g = gG;
 b = bG;
 a = aG;
-
+--.TOC file global variables
 classColors = false;
 nameBackgroundColor = false;
 prestigeIcons = false;
@@ -21,7 +21,9 @@ combatIndicatorPlayer = false;
 classIconPortrait = false;
 hideQuestTracker = false;
 
--- Player state
+--classic global variables
+isInBattleground = false;
+isQuestTrackerCollapsed = false;
 isInPVEInstance = false
 
 local function Setings_Load()
@@ -390,8 +392,17 @@ function ShowColorPicker(r, g, b)
     ColorPickerFrame:Show();
 end
 
-function setPlayerIsInPVEInstance(pveInstance) 
+local function setPlayerIsInPVEInstance(pveInstance) 
     isInPVEInstance = pveInstance
+end
+
+local function returnQuestTrackerToPreviousState(nonPvpInstance)
+    if nonPvpInstance ~= false then
+        if isQuestTrackerCollapsed ~= true then
+            ObjectiveTracker_Expand()
+        end
+        isInBattleground = false;
+    end
 end
 
 ans.removeRestedGlowEffect = removeRestedGlowEffect;
@@ -402,4 +413,5 @@ ans.nameBackgroundColor = nameBackgroundColor;
 ans.Setings_Load = Setings_Load;
 ans.cornerIcon = cornerIcon;
 ans.combatIndicatorPlayer = combatIndicatorPlayer;
-ans.setPlayerIsInPVEInstance = setPlayerIsInPVEInstance
+ans.setPlayerIsInPVEInstance = setPlayerIsInPVEInstance;
+ans.returnQuestTrackerToPreviousState = returnQuestTrackerToPreviousState;
