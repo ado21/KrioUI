@@ -31,7 +31,8 @@ local function Setings_Load()
         
         local panel = CreateFrame("Frame")
         panel.name = "KrioUI"
-        InterfaceOptions_AddCategory(panel)
+        local category = Settings.RegisterCanvasLayoutCategory(panel, panel.name)         
+        Settings.RegisterAddOnCategory(category);
 
         local title = panel:CreateFontString("ARTWORK", nil, "GameFontNormalLarge")
         title:SetPoint("TOPLEFT", 0, -10)
@@ -399,7 +400,7 @@ end
 local function returnQuestTrackerToPreviousState(nonPvpInstance)
     if nonPvpInstance ~= false then
         if isQuestTrackerCollapsed ~= true then
-            ObjectiveTracker_Expand()
+            ObjectiveTrackerFrame.Header.MinimizeButton:Click()
         end
         isInBattleground = false;
     end
