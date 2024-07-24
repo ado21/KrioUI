@@ -1,3 +1,53 @@
+--local addonName = ...
+
+--local iconKey = addonName .. "Icon"
+
+--local GetNamePlateForUnit = C_NamePlate.GetNamePlateForUnit
+
+--local iconTexture = {
+--    ["DEATHKNIGHT"] = "Interface\\AddOns\\KrioUI\\Textures\\DEATHKNIGHT.tga",
+--    ["DEMONHUNTER"] = "Interface\\AddOns\\KrioUI\\Textures\\DEMONHUNTER.tga",
+--    ["DRUID"] = "Interface\\AddOns\\KrioUI\\Textures\\DRUID.tga",
+  --  ["HUNTER"] = "Interface\\AddOns\\KrioUI\\Textures\\HUNTER.tga",
+--    ["MAGE"] = "Interface\\AddOns\\KrioUI\\Textures\\MAGE.tga",
+--    ["MONK"] = "Interface\\AddOns\\KrioUI\\Textures\\MONK.tga",
+--    ["PALADIN"] = "Interface\\AddOns\\KrioUI\\Textures\\PALADIN.tga",
+--    ["PRIEST"] = "Interface\\AddOns\\KrioUI\\Textures\\PRIEST.tga",
+--    ["ROGUE"] = "Interface\\AddOns\\KrioUI\\Textures\\ROGUE.tga",
+--    ["SHAMAN"] = "Interface\\AddOns\\KrioUI\\Textures\\SHAMAN.tga",
+--    ["WARLOCK"] = "Interface\\AddOns\\KrioUI\\Textures\\WARLOCK.tga",
+--   ["WARRIOR"] = "Interface\\AddOns\\KrioUI\\Textures\\WARRIOR.tga"
+--}
+
+--local frame = CreateFrame("Frame")
+ 
+--frame:SetScript("OnEvent", function(self, event, unit)
+--    local namePlate = GetNamePlateForUnit(unit)
+ --   if event == "NAME_PLATE_UNIT_ADDED" and UnitIsFriend("player", unit) then
+ --       SetCVar("nameplateShowOnlyNames", 0)
+--        DefaultCompactNamePlateFriendlyFrameOptions.displayName = true
+ --       local _, class = UnitClass(unit)
+--        if iconTexture[class] then
+--            local icon = namePlate[iconKey]
+--            if not icon then
+--                icon = namePlate:CreateTexture(nil, "OVERLAY")
+ --               icon:SetPoint('TOP', 0, 0)
+ --               icon:SetSize(32, 32)
+ --               namePlate[iconKey] = icon
+--            end
+ --           icon:SetTexture(iconTexture[class])
+ --           icon:Show()
+ --           return
+--        end
+--    end
+--    if namePlate[iconKey] then
+--        namePlate[iconKey]:Hide()
+--    end
+--end)
+
+--frame:RegisterEvent("NAME_PLATE_UNIT_ADDED")
+--frame:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
+
 --addon name, addon namespace
 local _, ans = ...;
 local isFrameExist = ans.isFrameExist;
@@ -91,12 +141,11 @@ if  (not isFrameExist(krio)) then
         --collapse quest tracker on entering battleground
         if (hideQuestTracker == true) then
             isInBattleground = true;
-            ObjectiveTracker_Collapse()
+            ObjectiveTrackerFrame.Header.MinimizeButton:Click()
         end
     end
 
     changeAreaFrame:SetScript("OnEvent", onEnterBattleground);
-
 end
 
 -- Remove PlayerFrame glow effect in rested area
