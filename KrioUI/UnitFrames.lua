@@ -30,9 +30,9 @@ local function classColor()
     frame:RegisterEvent("PLAYER_FOCUS_CHANGED");
     frame:SetScript("OnEvent", function(self, event, ...)
         if (event == "PLAYER_TARGET_CHANGED") then
-            updateColor("target", TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBar);
+            updateColor("target", TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBarsContainer.HealthBar);
         elseif (event == "PLAYER_FOCUS_CHANGED") then
-            updateColor("focus", FocusFrame.TargetFrameContent.TargetFrameContentMain.HealthBar);
+            updateColor("focus", FocusFrame.TargetFrameContent.TargetFrameContentMain.HealthBarsContainer.HealthBar);
         end
     end)
 
