@@ -1,7 +1,7 @@
 ## Interface: 110000
 ## Title: KrioUI
 ## Author: Krionel
-## Version: 1.1.3
+## Version: 1.1.4
 
 ## SavedVariables: classColors, nameBackgroundColor, prestigeIcons, outlineNameplates, combatIndicator, combatIndicatorPlayer, restedGlowFX, restedZZZFx, redFlashInCombat, rG, gG, bG, aG, cornerIcon, classIconPortrait, hideQuestTracker
 Config\functions.lua
