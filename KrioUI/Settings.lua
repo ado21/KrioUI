@@ -7,6 +7,7 @@ r = rG;
 g = gG;
 b = bG;
 a = aG;
+
 --.TOC file global variables
 classColors = false;
 nameBackgroundColor = false;
@@ -18,13 +19,45 @@ restedZZZFx = false;
 redFlashInCombat = false;
 cornerIcon = false;
 combatIndicatorPlayer = false;
-classIconPortrait = false;
 hideQuestTracker = false;
 
 --classic global variables
 isInBattleground = false;
 isQuestTrackerCollapsed = false;
 isInPVEInstance = false
+
+--Show RGB pallete to pick players favorite color
+local function ShowColorPicker(r, g, b)
+    ColorPickerFrame:SetupColorPickerAndShow({
+        r = r,
+        g = g,
+        b = b,
+        opacity = 1,
+        hasOpacity = true,
+        swatchFunc = function()
+            r, g, b = ColorPickerFrame:GetColorRGB()
+            a = ColorPickerFrame:GetColorAlpha()
+
+            PlayerFrame.PlayerFrameContainer.FrameTexture:SetDesaturated(true)
+            PlayerFrame.PlayerFrameContainer.FrameTexture:SetVertexColor(r,g,b)
+            PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.PlayerPortraitCornerIcon:SetVertexColor(rG,gG,bG)
+            TargetFrame.TargetFrameContainer.FrameTexture:SetVertexColor(r,g,b)
+            TargetFrameToT.FrameTexture:SetVertexColor(r,g,b)
+            FocusFrame.TargetFrameContainer.FrameTexture:SetVertexColor(r,g,b)
+            FocusFrameToT.FrameTexture:SetVertexColor(r,g,b)
+            PetFrameTexture:SetVertexColor(r,g,b)
+
+            rG = r
+            gG = g
+            bG = b
+        end,
+        cancelFunc = function()
+            r, g, b, a =
+            ColorPickerFrame.previousValues.r, ColorPickerFrame.previousValues.g,
+                ColorPickerFrame.previousValues.b, ColorPickerFrame.previousValues.a
+        end
+    })
+end
 
 local function Setings_Load()
     if  (not ans.isFrameExist(krioUiPanelName)) then
@@ -71,67 +104,60 @@ local function Setings_Load()
             combatIndicatorPlayerText.text:SetPoint("LEFT",0, -105)
             combatIndicatorPlayerText.text:SetText("Add Combat Indicator to PlayerFrame")
 
-            local classIconsPortraitText = CreateFrame("MessageFrame", "combatIndicatorText", settingsFrame)
-            classIconsPortraitText:SetPoint("TOPLEFT")
-            classIconsPortraitText:SetSize(100, 150)
-            classIconsPortraitText.text = classIconsPortraitText:CreateFontString("ARTWORK", nil, "GameFontNormal")
-            classIconsPortraitText.text:SetPoint("LEFT",0, -145)
-            classIconsPortraitText.text:SetText("Add Class Icons to Target/Focus Frame")
-
             local nameBackgroundColorText = CreateFrame("MessageFrame", "nameBackgroundColorText", settingsFrame)
             nameBackgroundColorText:SetPoint("TOPLEFT")
             nameBackgroundColorText:SetSize(100, 150)
             nameBackgroundColorText.text = nameBackgroundColorText:CreateFontString("ARTWORK", nil, "GameFontNormal")
-            nameBackgroundColorText.text:SetPoint("LEFT",0, -185)
+            nameBackgroundColorText.text:SetPoint("LEFT",0, -145)
             nameBackgroundColorText.text:SetText("Remove Backround Behind PlayerNames")
 
             local prestigeIconsText = CreateFrame("MessageFrame", "prestigeIconsText", settingsFrame)
             prestigeIconsText:SetPoint("TOPLEFT")
             prestigeIconsText:SetSize(100, 150)
             prestigeIconsText.text = prestigeIconsText:CreateFontString("ARTWORK", nil, "GameFontNormal")
-            prestigeIconsText.text:SetPoint("LEFT",0, -225)
+            prestigeIconsText.text:SetPoint("LEFT",0, -185)
             prestigeIconsText.text:SetText("Remove Prestige Icons on UnitFrames")
 
             local restedGlowEffectText = CreateFrame("MessageFrame", "restedGlowEffectText", settingsFrame)
             restedGlowEffectText:SetPoint("TOPLEFT")
             restedGlowEffectText:SetSize(100, 150)
             restedGlowEffectText.text = restedGlowEffectText:CreateFontString("ARTWORK", nil, "GameFontNormal")
-            restedGlowEffectText.text:SetPoint("LEFT",0, -265)
+            restedGlowEffectText.text:SetPoint("LEFT",0, -225)
             restedGlowEffectText.text:SetText("Remove rested GlowFX on PlayerFrame ")
             
             local restedZZZEffectText = CreateFrame("MessageFrame", "restedZZZEffectText", settingsFrame)
             restedZZZEffectText:SetPoint("TOPLEFT")
             restedZZZEffectText:SetSize(100, 150)
             restedZZZEffectText.text = restedZZZEffectText:CreateFontString("ARTWORK", nil, "GameFontNormal")
-            restedZZZEffectText.text:SetPoint("LEFT",0, -305)
+            restedZZZEffectText.text:SetPoint("LEFT",0, -265)
             restedZZZEffectText.text:SetText("Remove rested \"zzZ\" FX on PlayerFrame ")
 
             local portraitCornerIconText = CreateFrame("MessageFrame", "restedZZZEffectText", settingsFrame)
             portraitCornerIconText:SetPoint("TOPLEFT")
             portraitCornerIconText:SetSize(100, 150)
             portraitCornerIconText.text = portraitCornerIconText:CreateFontString("ARTWORK", nil, "GameFontNormal")
-            portraitCornerIconText.text:SetPoint("LEFT",0, -345)
+            portraitCornerIconText.text:SetPoint("LEFT",0, -305)
             portraitCornerIconText.text:SetText("Remove portrait corner icon (arrow) on PlayerFrame ")
 
             local redFlashInCombatText = CreateFrame("MessageFrame", "redFlashInCombatText", settingsFrame)
             redFlashInCombatText:SetPoint("TOPLEFT")
             redFlashInCombatText:SetSize(100, 150)
             redFlashInCombatText.text = redFlashInCombatText:CreateFontString("ARTWORK", nil, "GameFontNormal")
-            redFlashInCombatText.text:SetPoint("LEFT",0, -385)
+            redFlashInCombatText.text:SetPoint("LEFT",0, -345)
             redFlashInCombatText.text:SetText("Remove red flash while in combat on PlayerFrame")
 
             local hideQuestTrackerInBGText = CreateFrame("MessageFrame", "hideQuestTrackerInBGText", settingsFrame)
             hideQuestTrackerInBGText:SetPoint("TOPLEFT")
             hideQuestTrackerInBGText:SetSize(100, 150)
             hideQuestTrackerInBGText.text = hideQuestTrackerInBGText:CreateFontString("ARTWORK", nil, "GameFontNormal")
-            hideQuestTrackerInBGText.text:SetPoint("LEFT",0, -425)
+            hideQuestTrackerInBGText.text:SetPoint("LEFT",0, -385)
             hideQuestTrackerInBGText.text:SetText("Collapse Quest tracker on entering battleground")
             
             local frameColorText = CreateFrame("MessageFrame", "frameColorText", settingsFrame)
             frameColorText:SetPoint("TOPLEFT")
             frameColorText:SetSize(100, 150)
             frameColorText.text = frameColorText:CreateFontString("ARTWORK", nil, "GameFontNormal")
-            frameColorText.text:SetPoint("LEFT",0, -465)
+            frameColorText.text:SetPoint("LEFT",0, -425)
             frameColorText.text:SetText("Change color of frames to your preference")
             
             
@@ -163,63 +189,56 @@ local function Setings_Load()
                 combatIndicatorPlayer = not combatIndicatorPlayer
             end)
 
-            local classIconsPortraitCheckbox = CreateFrame("CheckButton", nil, settingsFrame, "UICheckButtonTemplate")
-            classIconsPortraitCheckbox:SetPoint("TOPRIGHT", 0, -205)
-            classIconsPortraitCheckbox:SetChecked(classIconPortrait)
-            classIconsPortraitCheckbox:HookScript("OnClick", function()
-                classIconPortrait = not classIconPortrait
-            end)
-
             local nameBackgroundColorCheckbox = CreateFrame("CheckButton", nil, settingsFrame, "UICheckButtonTemplate")
-            nameBackgroundColorCheckbox:SetPoint("TOPRIGHT", 0, -245)
+            nameBackgroundColorCheckbox:SetPoint("TOPRIGHT", 0, -205)
             nameBackgroundColorCheckbox:SetChecked(nameBackgroundColor)
             nameBackgroundColorCheckbox:HookScript("OnClick", function()
                 nameBackgroundColor = not nameBackgroundColor
             end)
 
             local prestigeIconsCheckbox = CreateFrame("CheckButton", nil, settingsFrame, "UICheckButtonTemplate")
-            prestigeIconsCheckbox:SetPoint("TOPRIGHT", 0, -285)
+            prestigeIconsCheckbox:SetPoint("TOPRIGHT", 0, -245)
             prestigeIconsCheckbox:SetChecked(prestigeIcons)
             prestigeIconsCheckbox:HookScript("OnClick", function()
                 prestigeIcons = not prestigeIcons
             end)
 
             local restedGlowEffectCheckbox = CreateFrame("CheckButton", nil, settingsFrame, "UICheckButtonTemplate")
-            restedGlowEffectCheckbox:SetPoint("TOPRIGHT", 0, -325)
+            restedGlowEffectCheckbox:SetPoint("TOPRIGHT", 0, -285)
             restedGlowEffectCheckbox:SetChecked(restedGlowFX)
             restedGlowEffectCheckbox:HookScript("OnClick", function()
                 restedGlowFX = not restedGlowFX
             end)
 
             local restedZZZEffectCheckbox = CreateFrame("CheckButton", nil, settingsFrame, "UICheckButtonTemplate")
-            restedZZZEffectCheckbox:SetPoint("TOPRIGHT", 0, -365)
+            restedZZZEffectCheckbox:SetPoint("TOPRIGHT", 0, -325)
             restedZZZEffectCheckbox:SetChecked(restedZZZFx)
             restedZZZEffectCheckbox:HookScript("OnClick", function()
                 restedZZZFx = not restedZZZFx
             end)
 
             local portraitCornerIconCheckbox = CreateFrame("CheckButton", nil, settingsFrame, "UICheckButtonTemplate")
-            portraitCornerIconCheckbox:SetPoint("TOPRIGHT", 0, -405)
+            portraitCornerIconCheckbox:SetPoint("TOPRIGHT", 0, -365)
             portraitCornerIconCheckbox:SetChecked(cornerIcon)
             portraitCornerIconCheckbox:HookScript("OnClick", function()
                 cornerIcon = not cornerIcon
             end)
 
             local redFlashInCombatCheckbox = CreateFrame("CheckButton", nil, settingsFrame, "UICheckButtonTemplate")
-            redFlashInCombatCheckbox:SetPoint("TOPRIGHT", 0, -445)
+            redFlashInCombatCheckbox:SetPoint("TOPRIGHT", 0, -405)
             redFlashInCombatCheckbox:SetChecked(redFlashInCombat)
             redFlashInCombatCheckbox:HookScript("OnClick", function()
                 redFlashInCombat = not redFlashInCombat
             end)
             local hideQuestTrackerInBGCheckbox = CreateFrame("CheckButton", nil, settingsFrame, "UICheckButtonTemplate")
-            hideQuestTrackerInBGCheckbox:SetPoint("TOPRIGHT", 0, -485)
+            hideQuestTrackerInBGCheckbox:SetPoint("TOPRIGHT", 0, -445)
             hideQuestTrackerInBGCheckbox:SetChecked(hideQuestTracker)
             hideQuestTrackerInBGCheckbox:HookScript("OnClick", function()
                 hideQuestTracker = not hideQuestTracker
             end)
 
             local frameColorButton = CreateFrame("Button", nil, settingsFrame, "UIPanelButtonTemplate")
-            frameColorButton:SetPoint("TOPRIGHT",-200, -525)
+            frameColorButton:SetPoint("TOPRIGHT",-100, -485)
             frameColorButton:SetSize(100 ,30)
             frameColorButton:SetText("Change Color")
             frameColorButton:SetPoint("CENTER")
@@ -227,25 +246,8 @@ local function Setings_Load()
                 ShowColorPicker(r,g,b);
             end)
 
-            local applyColorButton = CreateFrame("Button", nil, settingsFrame, "UIPanelButtonTemplate")
-            applyColorButton:SetPoint("TOPRIGHT",-100, -525)
-            applyColorButton:SetSize(100 ,30)
-            applyColorButton:SetText("Apply Color")
-            applyColorButton:SetPoint("CENTER")
-            applyColorButton:HookScript("OnClick", function()
-                rG, gG, bG =  ColorPickerFrame:GetColorRGB();
-                PlayerFrame.PlayerFrameContainer.FrameTexture:SetDesaturated(true)
-                PlayerFrame.PlayerFrameContainer.FrameTexture:SetVertexColor(rG,gG,bG)
-                PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.PlayerPortraitCornerIcon:SetVertexColor(rG,gG,bG)
-                TargetFrame.TargetFrameContainer.FrameTexture:SetVertexColor(rG,gG,bG)
-                TargetFrameToT.FrameTexture:SetVertexColor(rG,gG,bG)
-                FocusFrame.TargetFrameContainer.FrameTexture:SetVertexColor(rG,gG,bG)
-                FocusFrameToT.FrameTexture:SetVertexColor(rG,gG,bG)
-                PetFrameTexture:SetVertexColor(rG,gG,bG)
-            end)
-
             local defaultColorButton = CreateFrame("Button", nil, settingsFrame, "UIPanelButtonTemplate")
-            defaultColorButton:SetPoint("TOPRIGHT",-0, -525)
+            defaultColorButton:SetPoint("TOPRIGHT",-0, -485)
             defaultColorButton:SetSize(100 ,30)
             defaultColorButton:SetText("Default Color")
             defaultColorButton:SetPoint("CENTER")
@@ -383,14 +385,6 @@ local function cornerIcon()
     local playerFrameTargetContextual = PlayerFrame_GetPlayerFrameContentContextual();
     local playerPortraitCornerIcon = playerFrameTargetContextual.PlayerPortraitCornerIcon;
     playerPortraitCornerIcon:Hide();
-end
-
---Show RGB pallete to pick players favorite color
-function ShowColorPicker(r, g, b)
-    ColorPickerFrame:SetColorRGB(r,g,b);
-    ColorPickerFrame.previousValues = {r,g,b};
-    ColorPickerFrame:Hide(); -- Need to run the OnShow handler.
-    ColorPickerFrame:Show();
 end
 
 local function setPlayerIsInPVEInstance(pveInstance) 
